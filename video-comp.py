@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 import sys
+import os
 
 filename1 = sys.argv[1]
 filename2 = sys.argv[2]
@@ -48,6 +49,15 @@ while vid1.isOpened() and vid2.isOpened():
 
     elif key == 27:
         break
+
+    elif key == 115:
+        if curIndex >= 0 and len(videoBuf) > 0:
+            if not os.path.exists('snapshot'):
+                os.mkdir('snapshot')
+
+            fn = 'cpframes' + os.path.basename(sys.argv[1]) + '.' + str(curIndex) + '.jpg'
+            cv2.imwrite('snapshot/' + fn, videoBuf[curIndex - 1])
+            print(fn + " saved in current directory.")
 
 vid1.release()
 vid2.release()
