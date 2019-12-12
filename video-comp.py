@@ -13,11 +13,13 @@ vw = vid1.get(cv2.CAP_PROP_FRAME_WIDTH)
 vh = vid1.get(cv2.CAP_PROP_FRAME_HEIGHT)
 
 videoBuf = []
-curIndex = 0
+curIndex = -1
+
+indexColor = (200, 200, 200)
 
 while vid1.isOpened() and vid2.isOpened():
     if len(videoBuf) == 0:
-        cv2.imshow('Frame', np.zeros((480, 320, 3), np.uint8))
+        cv2.imshow('Frame', np.zeros((320, 320, 3), np.uint8))
 
     key = cv2.waitKey(-1)
 
@@ -26,12 +28,12 @@ while vid1.isOpened() and vid2.isOpened():
             if curIndex > 0:
                 curIndex -= 1
 
-            cv2.imshow('Frame', videoBuf[curIndex])
+            cv2.imshow('Frame', cv2.putText(videoBuf[curIndex], str(curIndex), (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, indexColor, 2, cv2.LINE_AA))
 
     elif key == 83:
         curIndex += 1
 
-        if curIndex > len(videoBuf):
+        if curIndex >= len(videoBuf):
             suc1, frame1 = vid1.read()
             suc2, frame2 = vid2.read()
 
@@ -45,7 +47,7 @@ while vid1.isOpened() and vid2.isOpened():
 
             videoBuf.append(frame)
 
-        cv2.imshow('Frame', videoBuf[curIndex - 1])
+        cv2.imshow('Frame', cv2.putText(videoBuf[curIndex], str(curIndex), (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, indexColor, 2, cv2.LINE_AA))
 
     elif key == 27:
         break
@@ -56,7 +58,7 @@ while vid1.isOpened() and vid2.isOpened():
                 os.mkdir('snapshot')
 
             fn = 'cpframes' + os.path.basename(sys.argv[1]) + '.' + str(curIndex) + '.jpg'
-            cv2.imwrite('snapshot/' + fn, videoBuf[curIndex - 1])
+            cv2.imwrite('snapshot/' + fn, videoBuf[curIndex])
             print(fn + " saved in current directory.")
 
 vid1.release()
